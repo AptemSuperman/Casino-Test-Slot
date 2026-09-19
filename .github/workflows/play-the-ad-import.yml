@@ -1,0 +1,60 @@
+name: Import PLAY THE AD source
+
+on:
+  push:
+    branches: [play-the-ad]
+    paths: ['.bootstrap/play-the-ad-source.tar.gz']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: play-the-ad-source-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Extract only new project files, never overwrite unrelated code
+        run: |
+          python3 - <<'PY'
+          import pathlib, tarfile
+          root = pathlib.Path.cwd().resolve()
+          if (root / 'play-the-ad/src/app.js').exists():
+              raise SystemExit('Project already exists; import refuses to overwrite it.')
+          with tarfile.open('.bootstrap/play-the-ad-source.tar.gz', 'r:gz') as archive:
+              for member in archive.getmembers():
+                  path = pathlib.PurePosixPath(member.name)
+                  if path.is_absolute() or '..' in path.parts or not path.parts or path.parts[0] != 'play-the-ad':
+                      raise SystemExit('Archive path rejected: ' + member.name)
+                  if member.isdir():
+                      (root / path).mkdir(parents=True, exist_ok=True)
+                  elif member.isfile():
+                      destination = root / path
+                      if destination.exists():
+                          raise SystemExit('Refusing to overwrite: ' + member.name)
+                      destination.parent.mkdir(parents=True, exist_ok=True)
+                      with archive.extractfile(member) as source:
+                          destination.write_bytes(source.read())
+                  else:
+                      raise SystemExit('Archive links and special files are not allowed.')
+          PY
+      - name: Test rules and build the exact standalone product
+        working-directory: play-the-ad
+        run: |
+          npm test
+          node scripts/test-recipes.mjs
+          npm run build
+          sha256sum dist/index.html
+      - name: Commit verified, readable source files to the isolated branch
+        run: |
+          git rm -- .bootstrap/play-the-ad-source.tar.gz
+          git add -- play-the-ad
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat: import tested PLAY THE AD source and standalone production build'
+          git push origin HEAD:refs/heads/play-the-ad
