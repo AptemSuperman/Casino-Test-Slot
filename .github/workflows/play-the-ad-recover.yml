@@ -1,0 +1,54 @@
+name: Recover PLAY THE AD checkpoint
+on:
+  push:
+    branches: [play-the-ad]
+    paths: ['.github/workflows/play-the-ad-recover.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover complete files from the partial checkpoint without modifying repository
+        run: |
+          python3 - <<'PY'
+          import base64, io, json, lzma, pathlib, tarfile
+          root = pathlib.Path.cwd()
+          out = root / 'recovered'
+          out.mkdir()
+          parts = sorted((root / '.bootstrap').glob('play-the-ad.part-*'))
+          raw = base64.b64decode(b''.join(p.read_bytes().strip() for p in parts), validate=True)
+          decoder = lzma.LZMADecompressor()
+          data = decoder.decompress(raw, max_length=8000000)
+          (out / 'checkpoint-prefix.tar').write_bytes(data)
+          report = {'parts': [p.name for p in parts], 'compressed_bytes': len(raw), 'recovered_bytes': len(data), 'archive_complete': decoder.eof, 'complete_files': [], 'partial_files': []}
+          stream = io.BytesIO(data)
+          try:
+              with tarfile.open(fileobj=stream, mode='r:') as archive:
+                  for item in archive:
+                      name = pathlib.PurePosixPath(item.name)
+                      if name.is_absolute() or '..' in name.parts or not name.parts or name.parts[0] != 'play-the-ad' or not item.isfile():
+                          continue
+                      target = out / name
+                      target.parent.mkdir(parents=True, exist_ok=True)
+                      start = item.offset_data
+                      payload = data[start:start + item.size]
+                      if len(payload) == item.size:
+                          target.write_bytes(payload)
+                          report['complete_files'].append({'path':item.name,'bytes':item.size})
+                      else:
+                          target.with_suffix(target.suffix + '.partial').write_bytes(payload)
+                          report['partial_files'].append({'path':item.name,'bytes':len(payload),'expected':item.size})
+          except (tarfile.ReadError, EOFError) as exc:
+              report['archive_note'] = str(exc)
+          (out / 'recovery.json').write_text(json.dumps(report, indent=2))
+          print(json.dumps(report, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: play-the-ad-checkpoint
+          path: recovered/
+          retention-days: 7
+          if-no-files-found: error
