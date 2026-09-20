@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#171d27">
+<meta name="description" content="Те самые короткие 3D-игры. Без гринда, рекламы и ожидания. Пять миров, 25 авторских уровней.">
+<title>PLAY THE AD — не смотри, играй</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23171d27'/%3E%3Cpath d='M23 17L48 32L23 47Z' fill='%2396dfc4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<div id="app">
+<header class="topbar">
+ <button class="brand" id="brand" aria-label="Выбрать игру"><span class="brand-mark">▶</span><span>PLAY<span class="brand-muted"> THE </span>AD<span class="brand-dot">.</span></span></button>
+ <span class="manifesto">НЕ СМОТРИ. <b>ИГРАЙ.</b></span>
+ <div class="header-actions"><button id="progress" class="progress-pill" title="Прогресс и выбор уровня">0 / 25 <span>эпизодов</span></button><button class="icon-button" id="sound" title="Звук" aria-label="Выключить звук"></button><button class="icon-button" id="settings" title="Настройки" aria-label="Настройки">⚙</button></div>
+</header>
+<main class="play-layout">
+ <aside class="story-panel"><div class="eyebrow" id="series-label">01 / 05 · ARCADE</div><h1 id="game-title">CROWD<br>CASCADE</h1><p class="game-tag" id="game-tag"></p><div class="story-divider"></div><div class="eyebrow">ПЯТЬ МАЛЕНЬКИХ ПРИКЛЮЧЕНИЙ</div><nav id="level-nav" aria-label="Выбор уровня"></nav><div class="side-note"><span>↗</span> Сразу интересный момент.<br>Без гринда. Без рекламы.</div></aside>
+ <section class="stage-shell" aria-label="Игровая сцена">
+  <canvas id="game" tabindex="0" aria-label="Игровое поле. Управление описано под полем."></canvas><div class="world-labels" id="world-labels" aria-hidden="true"></div>
+  <div class="stage-top"><div class="episode"><span id="episode-id">C1</span><span id="episode-name">Шесть лучше четырёх</span></div><div class="metric"><strong id="metric-value">64</strong><span id="metric-label">зарядов</span></div></div>
+  <div class="mission"><p id="mission"></p><span id="secondary"></span><div class="mission-track"><i id="mission-progress"></i></div></div>
+  <div class="start-hint" id="start-hint"><span class="gesture">↔</span><span id="control-hint"></span></div>
+  <div class="stage-bottom"><span class="tiny-badge" id="mode-badge">01 / 05</span><span class="stage-signature">PLAY THE AD <span>ORIGINALS</span></span></div>
+  <div id="loading" class="loading"><span class="loader-ring"></span><p>Собираем маленький мир…</p></div>
+  <div id="pause-overlay" class="veil" hidden><div class="pause-card"><span class="eyebrow">НИКУДА НЕ СПЕШИМ</span><h2>Пауза.</h2><p>Твой мир подождёт.</p><button class="primary" id="resume">Продолжить →</button></div></div>
+  <div id="result-overlay" class="veil result-veil" hidden><section class="result-card" aria-live="polite"><span class="eyebrow" id="result-kicker"></span><div class="result-stars" id="result-stars"></div><h2 id="result-title"></h2><p id="result-reason"></p><div id="result-metric"></div><div class="result-actions"><button id="more" class="primary">Ещё такое →</button><button id="again" class="secondary-button">Ещё раз</button></div><div class="result-links"><button id="result-next">Следующая игра ↗</button><button id="share-result">Поделиться</button></div><div id="sponsor" hidden></div></section></div>
+ </section>
+ <nav class="quick-actions" aria-label="Действия"><button id="next" class="action-button next-action" title="Следующая игра (N)"><span>⇥</span><small>Дальше</small></button><button id="restart" class="action-button" title="Перезапустить (R)"><span>↻</span><small>Заново</small></button><button id="pause" class="action-button" title="Пауза (P)"><span id="pause-icon">Ⅱ</span><small>Пауза</small></button><button id="library" class="action-button" title="Все игры и уровни"><span>▦</span><small>Уровни</small></button><button id="share" class="action-button" title="Поделиться уровнем"><span>↗</span><small>Ссылка</small></button></nav>
+</main>
+<footer class="game-rail" id="game-rail" aria-label="Выбор игры"></footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="library-dialog"><div class="dialog-heading"><div><span class="eyebrow">ВСЁ УЖЕ ОТКРЫТО</span><h2>Выбери свой момент.</h2></div><button class="icon-button close-dialog" aria-label="Закрыть">×</button></div><div id="library-content"></div></dialog>
+<dialog id="settings-dialog"><div class="dialog-heading"><h2>По-твоему.</h2><button class="icon-button close-dialog" aria-label="Закрыть">×</button></div><label class="setting-row">Звук <input id="mute-check" type="checkbox" checked></label><label class="setting-row">Качество <select id="quality"><option value="high">Высокое</option><option value="low">Экономное</option></select></label><p class="settings-note">Прогресс остаётся в этом браузере. Никаких аккаунтов и глобальных рейтингов.</p><p class="settings-note">На клавиатуре: R — повтор, N — дальше, P — пауза, M — звук.</p></dialog>
+<script type="module" src="./src/app.js"></script>
+</body></html>

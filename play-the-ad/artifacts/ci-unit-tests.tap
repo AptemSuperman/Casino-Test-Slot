@@ -1,0 +1,428 @@
+
+> play-the-ad@1.0.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: camera matrices round-trip positions including non-uniform scale
+ok 1 - camera matrices round-trip positions including non-uniform scale
+  ---
+  duration_ms: 2.299549
+  type: 'test'
+  ...
+# Subtest: seeded gameplay generator is reproducible and bounded
+ok 2 - seeded gameplay generator is reproducible and bounded
+  ---
+  duration_ms: 1.309817
+  type: 'test'
+  ...
+# Subtest: deep-link route validation
+ok 3 - deep-link route validation
+  ---
+  duration_ms: 1.391099
+  type: 'test'
+  ...
+# Subtest: corrupt, incompatible and denied storage are safe
+ok 4 - corrupt, incompatible and denied storage are safe
+  ---
+  duration_ms: 0.379867
+  type: 'test'
+  ...
+# Subtest: save schema filters untrusted entries and preserves valid records
+ok 5 - save schema filters untrusted entries and preserves valid records
+  ---
+  duration_ms: 0.578107
+  type: 'test'
+  ...
+# Subtest: all 25 authored data definitions satisfy contracts and are independent
+ok 6 - all 25 authored data definitions satisfy contracts and are independent
+  ---
+  duration_ms: 4.642951
+  type: 'test'
+  ...
+# Subtest: Crowd 1 has no idle resource consumption or victory
+ok 7 - Crowd 1 has no idle resource consumption or victory
+  ---
+  duration_ms: 2.301193
+  type: 'test'
+  ...
+# Subtest: Hole 1 has no idle resource consumption or victory
+ok 8 - Hole 1 has no idle resource consumption or victory
+  ---
+  duration_ms: 3.599378
+  type: 'test'
+  ...
+# Subtest: Pins 1 has no idle resource consumption or victory
+ok 9 - Pins 1 has no idle resource consumption or victory
+  ---
+  duration_ms: 6.007461
+  type: 'test'
+  ...
+# Subtest: Screws 1 has no idle resource consumption or victory
+ok 10 - Screws 1 has no idle resource consumption or victory
+  ---
+  duration_ms: 28.321268
+  type: 'test'
+  ...
+# Subtest: Wreck 1 has no idle resource consumption or victory
+ok 11 - Wreck 1 has no idle resource consumption or victory
+  ---
+  duration_ms: 2.343792
+  type: 'test'
+  ...
+# Subtest: Crowd 2 has no idle resource consumption or victory
+ok 12 - Crowd 2 has no idle resource consumption or victory
+  ---
+  duration_ms: 1.016271
+  type: 'test'
+  ...
+# Subtest: Hole 2 has no idle resource consumption or victory
+ok 13 - Hole 2 has no idle resource consumption or victory
+  ---
+  duration_ms: 1.149489
+  type: 'test'
+  ...
+# Subtest: Pins 2 has no idle resource consumption or victory
+ok 14 - Pins 2 has no idle resource consumption or victory
+  ---
+  duration_ms: 4.338294
+  type: 'test'
+  ...
+# Subtest: Screws 2 has no idle resource consumption or victory
+ok 15 - Screws 2 has no idle resource consumption or victory
+  ---
+  duration_ms: 26.035394
+  type: 'test'
+  ...
+# Subtest: Wreck 2 has no idle resource consumption or victory
+ok 16 - Wreck 2 has no idle resource consumption or victory
+  ---
+  duration_ms: 1.355072
+  type: 'test'
+  ...
+# Subtest: Crowd 3 has no idle resource consumption or victory
+ok 17 - Crowd 3 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.589978
+  type: 'test'
+  ...
+# Subtest: Hole 3 has no idle resource consumption or victory
+ok 18 - Hole 3 has no idle resource consumption or victory
+  ---
+  duration_ms: 1.001094
+  type: 'test'
+  ...
+# Subtest: Pins 3 has no idle resource consumption or victory
+ok 19 - Pins 3 has no idle resource consumption or victory
+  ---
+  duration_ms: 3.987191
+  type: 'test'
+  ...
+# Subtest: Screws 3 has no idle resource consumption or victory
+ok 20 - Screws 3 has no idle resource consumption or victory
+  ---
+  duration_ms: 14.0077
+  type: 'test'
+  ...
+# Subtest: Wreck 3 has no idle resource consumption or victory
+ok 21 - Wreck 3 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.400234
+  type: 'test'
+  ...
+# Subtest: Crowd 4 has no idle resource consumption or victory
+ok 22 - Crowd 4 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.289429
+  type: 'test'
+  ...
+# Subtest: Hole 4 has no idle resource consumption or victory
+ok 23 - Hole 4 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.508486
+  type: 'test'
+  ...
+# Subtest: Pins 4 has no idle resource consumption or victory
+ok 24 - Pins 4 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.521991
+  type: 'test'
+  ...
+# Subtest: Screws 4 has no idle resource consumption or victory
+ok 25 - Screws 4 has no idle resource consumption or victory
+  ---
+  duration_ms: 22.265478
+  type: 'test'
+  ...
+# Subtest: Wreck 4 has no idle resource consumption or victory
+ok 26 - Wreck 4 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.390477
+  type: 'test'
+  ...
+# Subtest: Crowd 5 has no idle resource consumption or victory
+ok 27 - Crowd 5 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.313784
+  type: 'test'
+  ...
+# Subtest: Hole 5 has no idle resource consumption or victory
+ok 28 - Hole 5 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.509708
+  type: 'test'
+  ...
+# Subtest: Pins 5 has no idle resource consumption or victory
+ok 29 - Pins 5 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.549973
+  type: 'test'
+  ...
+# Subtest: Screws 5 has no idle resource consumption or victory
+ok 30 - Screws 5 has no idle resource consumption or victory
+  ---
+  duration_ms: 18.404349
+  type: 'test'
+  ...
+# Subtest: Wreck 5 has no idle resource consumption or victory
+ok 31 - Wreck 5 has no idle resource consumption or victory
+  ---
+  duration_ms: 0.439819
+  type: 'test'
+  ...
+# Subtest: gate x2 applies exactly once to a legal crossing
+ok 32 - gate x2 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.793597
+  type: 'test'
+  ...
+# Subtest: gate x3 applies exactly once to a legal crossing
+ok 33 - gate x3 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.369908
+  type: 'test'
+  ...
+# Subtest: gate x4 applies exactly once to a legal crossing
+ok 34 - gate x4 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.357876
+  type: 'test'
+  ...
+# Subtest: gate x5 applies exactly once to a legal crossing
+ok 35 - gate x5 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.437434
+  type: 'test'
+  ...
+# Subtest: gate x7 applies exactly once to a legal crossing
+ok 36 - gate x7 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.458374
+  type: 'test'
+  ...
+# Subtest: gate x9 applies exactly once to a legal crossing
+ok 37 - gate x9 applies exactly once to a legal crossing
+  ---
+  duration_ms: 0.450619
+  type: 'test'
+  ...
+# Subtest: crowd accounting has no hidden numeric population or free damage
+ok 38 - crowd accounting has no hidden numeric population or free damage
+  ---
+  duration_ms: 43.223171
+  type: 'test'
+  ...
+# Subtest: 30, 60 and 120 Hz display clocks run the same 60 Hz economy
+ok 39 - 30, 60 and 120 Hz display clocks run the same 60 Hz economy
+  ---
+  duration_ms: 50.192973
+  type: 'test'
+  ...
+# Subtest: cancel stops crowd firing and clears held keys
+ok 40 - cancel stops crowd firing and clears held keys
+  ---
+  duration_ms: 2.125746
+  type: 'test'
+  ...
+# Subtest: hole drag is relative, bounded and does not teleport
+ok 41 - hole drag is relative, bounded and does not teleport
+  ---
+  duration_ms: 1.218388
+  type: 'test'
+  ...
+# Subtest: oversized objects do not disappear even when centered over the hole
+ok 42 - oversized objects do not disappear even when centered over the hole
+  ---
+  duration_ms: 0.583837
+  type: 'test'
+  ...
+# Subtest: growth is credited only after actual sinking finishes
+ok 43 - growth is credited only after actual sinking finishes
+  ---
+  duration_ms: 0.609595
+  type: 'test'
+  ...
+# Subtest: every growth tier has enough fitting mass to reach the final target
+ok 44 - every growth tier has enough fitting mass to reach the final target
+  ---
+  duration_ms: 0.46777
+  type: 'test'
+  ...
+# Subtest: protected absorption actually fails; the shield is not decorative
+ok 45 - protected absorption actually fails; the shield is not decorative
+  ---
+  duration_ms: 0.20983
+  type: 'test'
+  ...
+# Subtest: P1: volumes and gold conserved through all successful transfers
+ok 46 - P1: volumes and gold conserved through all successful transfers
+  ---
+  duration_ms: 1.132858
+  type: 'test'
+  ...
+# Subtest: P2: volumes and gold conserved through all successful transfers
+ok 47 - P2: volumes and gold conserved through all successful transfers
+  ---
+  duration_ms: 3.620097
+  type: 'test'
+  ...
+# Subtest: P3: volumes and gold conserved through all successful transfers
+ok 48 - P3: volumes and gold conserved through all successful transfers
+  ---
+  duration_ms: 3.258424
+  type: 'test'
+  ...
+# Subtest: P4: volumes and gold conserved through all successful transfers
+ok 49 - P4: volumes and gold conserved through all successful transfers
+  ---
+  duration_ms: 5.667819
+  type: 'test'
+  ...
+# Subtest: P5: volumes and gold conserved through all successful transfers
+ok 50 - P5: volumes and gold conserved through all successful transfers
+  ---
+  duration_ms: 8.502834
+  type: 'test'
+  ...
+# Subtest: pin duplicate clicks cannot create new liquid, gold or extra pulls
+ok 51 - pin duplicate clicks cannot create new liquid, gold or extra pulls
+  ---
+  duration_ms: 3.507769
+  type: 'test'
+  ...
+# Subtest: a second valid pin order is accepted from physical state, not an answer list
+ok 52 - a second valid pin order is accepted from physical state, not an answer list
+  ---
+  duration_ms: 5.441607
+  type: 'test'
+  ...
+# Subtest: limited water wasted before cooling cannot become a free safe route
+ok 53 - limited water wasted before cooling cannot become a free safe route
+  ---
+  duration_ms: 4.089241
+  type: 'test'
+  ...
+# Subtest: box automation settles before overflow is judged
+ok 54 - box automation settles before overflow is judged
+  ---
+  duration_ms: 0.362384
+  type: 'test'
+  ...
+# Subtest: buffer is finite and a fourth unmatched color loses
+ok 55 - buffer is finite and a fourth unmatched color loses
+  ---
+  duration_ms: 0.317061
+  type: 'test'
+  ...
+# Subtest: S1: solver has a valid sequence without paid extra space
+ok 56 - S1: solver has a valid sequence without paid extra space
+  ---
+  duration_ms: 12.195066
+  type: 'test'
+  ...
+# Subtest: S2: solver has a valid sequence without paid extra space
+ok 57 - S2: solver has a valid sequence without paid extra space
+  ---
+  duration_ms: 23.386455
+  type: 'test'
+  ...
+# Subtest: S3: solver has a valid sequence without paid extra space
+ok 58 - S3: solver has a valid sequence without paid extra space
+  ---
+  duration_ms: 10.420794
+  type: 'test'
+  ...
+# Subtest: S4: solver has a valid sequence without paid extra space
+ok 59 - S4: solver has a valid sequence without paid extra space
+  ---
+  duration_ms: 28.834824
+  type: 'test'
+  ...
+# Subtest: S5: solver has a valid sequence without paid extra space
+ok 60 - S5: solver has a valid sequence without paid extra space
+  ---
+  duration_ms: 17.410102
+  type: 'test'
+  ...
+# Subtest: occluded screw is not removable through a higher plate
+ok 61 - occluded screw is not removable through a higher plate
+  ---
+  duration_ms: 9.944527
+  type: 'test'
+  ...
+# Subtest: single support rotates a real plate and changes access
+ok 62 - single support rotates a real plate and changes access
+  ---
+  duration_ms: 6.765402
+  type: 'test'
+  ...
+# Subtest: double click cannot duplicate a screw or collect two items
+ok 63 - double click cannot duplicate a screw or collect two items
+  ---
+  duration_ms: 6.837836
+  type: 'test'
+  ...
+# Subtest: drilled solid geometry has finite closed wall data, including butterfly bulges
+ok 64 - drilled solid geometry has finite closed wall data, including butterfly bulges
+  ---
+  duration_ms: 6.675674
+  type: 'test'
+  ...
+# Subtest: destruction structures remain stable before impact
+ok 65 - destruction structures remain stable before impact
+  ---
+  duration_ms: 135.880434
+  type: 'test'
+  ...
+# Subtest: a simple click does not spend a ball
+ok 66 - a simple click does not spend a ball
+  ---
+  duration_ms: 3.271829
+  type: 'test'
+  ...
+# Subtest: fast projectile hits a thin obstacle instead of tunneling
+ok 67 - fast projectile hits a thin obstacle instead of tunneling
+  ---
+  duration_ms: 1.120565
+  type: 'test'
+  ...
+# Subtest: prediction matches actual free flight and first reflector within 0.08 units
+ok 68 - prediction matches actual free flight and first reflector within 0.08 units
+  ---
+  duration_ms: 2.067328
+  type: 'test'
+  ...
+# Subtest: target damage follows actual motion, not merely a collision-area hit
+ok 69 - target damage follows actual motion, not merely a collision-area hit
+  ---
+  duration_ms: 61.827456
+  type: 'test'
+  ...
+1..69
+# tests 69
+# suites 0
+# pass 69
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 742.704668

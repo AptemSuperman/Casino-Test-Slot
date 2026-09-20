@@ -1,0 +1,2 @@
+export function context(){let serial=0;return {renderer:{width:1000,height:800,hole:[],setCamera(){},unproject(x,y,plane){return plane==='front'?{x,y,z:0}:{x,y:0,z:y};},project(p){return{x:p[0],y:p[1],depth:0};},addMesh(){return ++serial;},removeMesh(){}},sound:{play(){}},reduced:true,started(){},finished(){}};}
+export function tick(g,seconds=1){for(let i=0;i<Math.round(seconds*60);i++){g.update(1/60);if(g.result)break;}return g.snapshot();}
