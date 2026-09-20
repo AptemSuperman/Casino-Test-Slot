@@ -1,0 +1,48 @@
+name: PLAY THE AD checks and build
+on:
+  push:
+    branches: [play-the-ad]
+    paths:
+      - 'play-the-ad/**'
+      - '.github/workflows/play-the-ad-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: play-the-ad-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    if: github.ref == 'refs/heads/play-the-ad'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+        working-directory: play-the-ad
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rules and every level solution
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          npm test | tee artifacts/ci-unit-tests.tap
+          npm run test:recipes | tee artifacts/ci-recipes.log
+      - name: Standalone static build
+        run: |
+          npm run build
+          sha256sum dist/index.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PLAY-THE-AD-${{ github.sha }}
+          path: |
+            play-the-ad/dist/
+            play-the-ad/artifacts/ci-unit-tests.tap
+            play-the-ad/artifacts/ci-recipes.log
+            play-the-ad/artifacts/logic-results.json
+            play-the-ad/docs/QA.md
+          if-no-files-found: error
+          retention-days: 30
