@@ -1,9 +1,9 @@
-name: Import PLAY THE AD source
+name: Verify and import PLAY THE AD source
 
 on:
   push:
     branches: [play-the-ad]
-    paths: ['.bootstrap/play-the-ad-source.tar.gz']
+    paths: ['.bootstrap/play-the-ad.manifest.json']
 
 permissions:
   contents: write
@@ -14,47 +14,84 @@ concurrency:
 
 jobs:
   import:
+    if: github.ref == 'refs/heads/play-the-ad'
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Extract only new project files, never overwrite unrelated code
+      - name: Validate transport, scope and unchanged existing files before extracting
         run: |
           python3 - <<'PY'
-          import pathlib, tarfile
+          import base64, hashlib, io, json, os, pathlib, re, tarfile
           root = pathlib.Path.cwd().resolve()
-          if (root / 'play-the-ad/src/app.js').exists():
-              raise SystemExit('Project already exists; import refuses to overwrite it.')
-          with tarfile.open('.bootstrap/play-the-ad-source.tar.gz', 'r:gz') as archive:
+          manifest = json.loads((root / '.bootstrap/play-the-ad.manifest.json').read_text())
+          digest = lambda data: hashlib.sha256(data).hexdigest()
+          expected = manifest['build_sha256']
+          if not re.fullmatch('[0-9a-f]{64}', expected):
+              raise SystemExit('Invalid expected build hash')
+          encoded = []
+          parts = manifest['parts']
+          if not 1 <= len(parts) <= 32:
+              raise SystemExit('Invalid part count')
+          for part in parts:
+              if not re.fullmatch(r'\.bootstrap/play-the-ad\.part-[0-9]{2}', part['path']):
+                  raise SystemExit('Invalid part path')
+              data = (root / part['path']).read_bytes()
+              if len(data) > 20000 or digest(data) != part['sha256']:
+                  raise SystemExit('Part size/hash mismatch: ' + part['path'])
+              encoded.append(data.strip())
+          archive_bytes = base64.b64decode(b''.join(encoded), validate=True)
+          if len(archive_bytes) > 500000 or digest(archive_bytes) != manifest['archive_sha256']:
+              raise SystemExit('Archive size/hash mismatch')
+          files = manifest['files']
+          if not 1 <= len(files) <= 300:
+              raise SystemExit('Invalid source file count')
+          pending = {}
+          total = 0
+          with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode='r:xz') as archive:
               for member in archive.getmembers():
                   path = pathlib.PurePosixPath(member.name)
                   if path.is_absolute() or '..' in path.parts or not path.parts or path.parts[0] != 'play-the-ad':
                       raise SystemExit('Archive path rejected: ' + member.name)
-                  if member.isdir():
-                      (root / path).mkdir(parents=True, exist_ok=True)
-                  elif member.isfile():
-                      destination = root / path
-                      if destination.exists():
-                          raise SystemExit('Refusing to overwrite: ' + member.name)
-                      destination.parent.mkdir(parents=True, exist_ok=True)
-                      with archive.extractfile(member) as source:
-                          destination.write_bytes(source.read())
-                  else:
-                      raise SystemExit('Archive links and special files are not allowed.')
+                  if not member.isfile() or member.size > 1000000 or member.name in pending:
+                      raise SystemExit('Links, special files, oversized files and duplicates are forbidden')
+                  total += member.size
+                  if total > 8000000:
+                      raise SystemExit('Expanded source exceeds size limit')
+                  data = archive.extractfile(member).read()
+                  data.decode('utf-8')
+                  if digest(data) != files.get(member.name):
+                      raise SystemExit('Source hash mismatch: ' + member.name)
+                  destination = root / path
+                  if destination.exists():
+                      previous = manifest['allow_existing'].get(member.name)
+                      if previous is None or digest(destination.read_bytes()) != previous:
+                          raise SystemExit('Refusing to overwrite an unexpected existing file: ' + member.name)
+                  pending[member.name] = data
+          if set(pending) != set(files):
+              raise SystemExit('Source file set mismatch')
+          for name, data in pending.items():
+              destination = root / name
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              destination.write_bytes(data)
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write('EXPECTED_BUILD_SHA=' + expected + '\n')
+          print('Validated and extracted', len(pending), 'readable source files')
           PY
-      - name: Test rules and build the exact standalone product
+      - name: Run actual rule tests, all 25 recipes and reproducible production build
         working-directory: play-the-ad
         run: |
-          npm test
-          node scripts/test-recipes.mjs
+          mkdir -p artifacts
+          npm test | tee artifacts/ci-unit-tests.tap
+          npm run test:recipes | tee artifacts/ci-recipes.log
           npm run build
-          sha256sum dist/index.html
-      - name: Commit verified, readable source files to the isolated branch
+          echo "$EXPECTED_BUILD_SHA  dist/index.html" | sha256sum --check --strict
+      - name: Commit tested source and standalone build only to the isolated branch
         run: |
-          git rm -- .bootstrap/play-the-ad-source.tar.gz
+          git rm -- .bootstrap/play-the-ad.part-* .bootstrap/play-the-ad.manifest.json
           git add -- play-the-ad
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat: import tested PLAY THE AD source and standalone production build'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat: ship five tested 3D games, 25 levels and offline production build'
           git push origin HEAD:refs/heads/play-the-ad
