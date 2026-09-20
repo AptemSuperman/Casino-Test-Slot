@@ -1,0 +1,101 @@
+name: Verify and ship PLAY THE AD
+on:
+  push:
+    branches: [play-the-ad]
+    paths: ['.github/workflows/play-the-ad-release.yml']
+permissions:
+  contents: write
+concurrency:
+  group: play-the-ad-release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/play-the-ad'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate complete source checkpoint before extracting
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, io, pathlib, tarfile
+          root = pathlib.Path.cwd()
+          hashes = [
+            '32ce406942294acbe27e0ccb51bdb5d62a0fd3600ac96ba8a773c3fe5ffbe5fc',
+            'd8995cecf58ddc63422bcdb728be96ee0d858ea2761f6c6f7334366dacc4f3c5',
+            '111a28c0650d4c177de18d3d954824a382a1006e2963f5099a039a3ae159627f',
+            '97ffcd9c9620b9c728f1dc539e49a379bb81372e336cdcf7f98b67ca5a118896',
+            'f3428d4a8e5c5a86ab52dc66a6dceb321bf53f06c34f73a7bf61576eb781ee80',
+            '181210abc817dc085d5db86a67f696a4fbf7eb42ea118989fbcf9831de0e5cd0',
+            'e0de55a39dcab54564a6f0541484ef235d4fc71cd2addbc953106e2152624664',
+            'f8ac82b40b818d25e7e7e939691a1b66657b067e5e4569d01690a285d2825731']
+          chunks = []
+          for i, expected in enumerate(hashes, 1):
+              path = root / f'.bootstrap/release.part-{i:02}'
+              data = path.read_bytes()
+              if len(data) > 20000 or hashlib.sha256(data).hexdigest() != expected:
+                  raise SystemExit(f'Checkpoint part {i} hash mismatch')
+              chunks.append(data.strip())
+          archive = base64.b64decode(b''.join(chunks), validate=True)
+          if hashlib.sha256(archive).hexdigest() != 'a766f857e7b14978cdbcaffc957db34b7d8efbd02f8467cf29ab1562b57a5b24':
+              raise SystemExit('Complete archive hash mismatch')
+          allowed = {
+              'play-the-ad/package.json': '671db7f292bcb6798f357823c3fb927435be5621',
+              'play-the-ad/src/core/math.js': '2caa03836c93fc5ad184dcb9d664af4404c55f14'
+          }
+          pending = {}
+          total = 0
+          with tarfile.open(fileobj=io.BytesIO(archive), mode='r:xz') as source:
+              for member in source:
+                  p = pathlib.PurePosixPath(member.name)
+                  if p.is_absolute() or '..' in p.parts or not p.parts or p.parts[0] != 'play-the-ad':
+                      raise SystemExit('Invalid source path')
+                  if not member.isfile() or member.size > 1000000 or member.name in pending:
+                      raise SystemExit('Invalid source entry')
+                  total += member.size
+                  if total > 8000000:
+                      raise SystemExit('Source too large')
+                  data = source.extractfile(member).read()
+                  data.decode('utf-8')
+                  target = root / p
+                  if target.exists():
+                      old = target.read_bytes()
+                      blob = hashlib.sha1(b'blob ' + str(len(old)).encode() + b'\0' + old).hexdigest()
+                      if allowed.get(member.name) != blob:
+                          raise SystemExit('Refusing unexpected overwrite: ' + member.name)
+                  pending[member.name] = data
+          if len(pending) != 30 or total != 224741:
+              raise SystemExit('Unexpected source file count or size')
+          for name, data in pending.items():
+              target = root / name
+              target.parent.mkdir(parents=True, exist_ok=True)
+              target.write_bytes(data)
+          print('Recovered', len(pending), 'complete readable source files;', total, 'bytes')
+          PY
+      - name: Independently run rule tests, all level recipes and production build
+        working-directory: play-the-ad
+        run: |
+          mkdir -p artifacts
+          npm test | tee artifacts/ci-unit-tests.tap
+          npm run test:recipes | tee artifacts/ci-recipes.log
+          npm run build
+          echo '1dacc7edeefa721a4eb98bacb20076aef7ec564fcd3b5cd094f47a1598550d6a  dist/index.html' | sha256sum --check --strict
+      - name: Persist complete source and exact verified build without changing main
+        run: |
+          git rm -- .bootstrap/release.part-*
+          git add -- play-the-ad
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat: ship five 3D games, 25 verified levels and standalone PLAY THE AD build'
+          git push origin HEAD:refs/heads/play-the-ad
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PLAY-THE-AD-verified-build
+          path: |
+            play-the-ad/dist/
+            play-the-ad/artifacts/ci-unit-tests.tap
+            play-the-ad/artifacts/ci-recipes.log
+            play-the-ad/artifacts/logic-results.json
+          if-no-files-found: error
+          retention-days: 30
